@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&family=Fredoka+One&family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Define root variables for colors */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Animations for UI elements */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.7s forwards;
+  }
+  .animate-bounce-in {
+    animation: bounceIn 0.5s forwards;
+  }
+  .animate-slide-in {
+    animation: slideIn 0.8s forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Button styling */
+button {
+  font-family: 'Press Start 2P', cursive; /* Retro font for buttons */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
