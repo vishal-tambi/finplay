@@ -26,7 +26,8 @@ const DragAndDrop = () => {
   const [streak, setStreak] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [shuffledTerms, setShuffledTerms] = useState([]);
-  
+  const [shuffledDefinitions, setShuffledDefinitions] = useState([]);
+
   useEffect(() => {
     shuffleTerms();
   }, []);
@@ -53,8 +54,11 @@ const DragAndDrop = () => {
   }, [feedback]);
 
   const shuffleTerms = () => {
-    const shuffled = [...termsData].sort(() => Math.random() - 0.5);
+    const shuffled = [...termsData];
+    // Shuffle terms and definitions
+    shuffled.sort(() => Math.random() - 0.5);
     setShuffledTerms(shuffled);
+    setShuffledDefinitions(shuffled.map(item => item.definition).sort(() => Math.random() - 0.5));
   };
 
   const startGame = () => {
@@ -83,9 +87,9 @@ const DragAndDrop = () => {
     setFeedback(null);
   };
 
-  const handleDrop = (definition, term) => {
+  const handleDrop = (definition) => {
     if (!isGameActive) return;
-    
+
     if (draggedTerm && draggedTerm.definition === definition) {
       const pointsEarned = 10 + (streak * 2);
       setScore(score + pointsEarned);
@@ -159,15 +163,11 @@ const DragAndDrop = () => {
               {shuffledTerms.map((item) => (
                 <div
                   key={item.term}
-                  className={`
-                    ${matchedTerms.includes(item.term)
+                  className={`${
+                    matchedTerms.includes(item.term)
                       ? "bg-green-600 opacity-50"
-                      : "bg-blue-500 hover:bg-blue-600"}
-                    text-white py-3 px-4 rounded-lg cursor-pointer
-                    transition duration-300 transform hover:scale-105
-                    ${!isGameActive ? "pointer-events-none opacity-50" : ""}
-                    shadow-md
-                  `}
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } text-white py-3 px-4 rounded-lg cursor-pointer transition duration-300 transform hover:scale-105 ${!isGameActive ? "pointer-events-none opacity-50" : ""} shadow-md`}
                   draggable={!matchedTerms.includes(item.term)}
                   onDragStart={() => handleDragStart(item)}
                 >
@@ -183,21 +183,18 @@ const DragAndDrop = () => {
           <div className="bg-blue-800 p-4 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Definitions</h2>
             <div className="space-y-4">
-              {shuffledTerms.map((item) => (
+              {shuffledDefinitions.map((definition, index) => (
                 <div
-                  key={item.definition}
-                  className={`
-                    bg-opacity-90 backdrop-blur-sm
-                    ${matchedTerms.includes(item.term) ? "bg-green-700" : "bg-gray-700"}
-                    p-4 rounded-lg border-2 border-dashed
-                    ${matchedTerms.includes(item.term) ? "border-green-500" : "border-blue-300"}
-                    transition duration-300
-                    ${!isGameActive ? "pointer-events-none opacity-50" : ""}
-                  `}
+                  key={definition}
+                  className={`bg-opacity-90 backdrop-blur-sm ${
+                    matchedTerms.includes(definition) ? "bg-green-700" : "bg-gray-700"
+                  } p-4 rounded-lg border-2 border-dashed ${
+                    matchedTerms.includes(definition) ? "border-green-500" : "border-blue-300"
+                  } transition duration-300 ${!isGameActive ? "pointer-events-none opacity-50" : ""}`}
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => handleDrop(item.definition, item)}
+                  onDrop={() => handleDrop(definition)}
                 >
-                  {item.definition}
+                  {definition}
                 </div>
               ))}
             </div>
